@@ -17,4 +17,10 @@ namespace Projeto.Web.Models
         public string Nome { get; set; }
         public string DataFundacao { get; set; }
     }
+
+    public class TimeModelDropDown
+    {
+        public int IdTime { get; set; }
+        public string Nome { get; set; }
+    }
 }

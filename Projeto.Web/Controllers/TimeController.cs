@@ -62,5 +62,24 @@ namespace Projeto.Web.Controllers
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
         }
+
+        [HttpDelete]
+        [Route("excluir")]
+        public HttpResponseMessage Excluir(int id)
+        {
+            try
+            {
+                TimeDal d = new TimeDal();
+                Time t = d.FindById(id);
+
+                d.Delete(t);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Time excluído.");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, e.Message);
+            }
+        }
     }
 }

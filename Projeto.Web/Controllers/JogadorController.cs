@@ -14,6 +14,33 @@ namespace Projeto.Web.Controllers
     [RoutePrefix("services/jogador")]
     public class JogadorController : ApiController
     {
+        [HttpGet]
+        [Route("carregarTimes")]
+        public List<TimeModelDropDown> CarregarTimes()
+        {
+            try
+            {
+                List<TimeModelDropDown> lista = new List<TimeModelDropDown>();
+
+                TimeDal d = new TimeDal();
+
+                foreach (Time t in d.FindAll())
+                {
+                    TimeModelDropDown model = new TimeModelDropDown();
+                    model.IdTime = t.IdTime;
+                    model.Nome = t.Nome;
+
+                    lista.Add(model);
+                }
+
+                return lista;
+            }
+            catch
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+        }
+
         [HttpPost]
         [Route("cadastrar")]
         public HttpResponseMessage Cadastrar(JogadorModelCadastro model)
@@ -48,7 +75,7 @@ namespace Projeto.Web.Controllers
 
                 JogadorDal d = new JogadorDal();
 
-                foreach(Jogador j in d.FindAll())
+                foreach (Jogador j in d.FindAll())
                 {
                     JogadorModelConsulta model = new JogadorModelConsulta();
                     model.IdJogador = j.IdJogador;
@@ -66,6 +93,25 @@ namespace Projeto.Web.Controllers
             catch
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+        }
+
+        [HttpDelete]
+        [Route("excluir")]
+        public HttpResponseMessage Excluir(int id)
+        {
+            try
+            {
+                JogadorDal d = new JogadorDal();
+                Jogador j = d.FindById(id);
+
+                d.Delete(j);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Jogador excluído.");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, e.Message);
             }
         }
     }
