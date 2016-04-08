@@ -63,6 +63,50 @@ namespace Projeto.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("editar")]
+        public TimeModelConsulta Editar(int id)
+        {
+            try
+            {
+                TimeDal d = new TimeDal();
+                Time t = d.FindById(id);
+
+                TimeModelConsulta model = new TimeModelConsulta();
+                model.IdTime = t.IdTime;
+                model.Nome = t.Nome;
+                model.DataFundacao = t.DataFundacao.ToString("dd/MM/yyyy");
+
+                return model;
+            }
+            catch
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+        }
+
+        [HttpPut]
+        [Route("atualizar")]
+        public HttpResponseMessage Atualizar(TimeModelEdicao model)
+        {
+            try
+            {
+                Time t = new Time();
+                t.IdTime = model.IdTime;
+                t.Nome = model.Nome;
+                t.DataFundacao = model.DataFundacao;
+
+                TimeDal d = new TimeDal();
+                d.Update(t);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Time atualizado.");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, e.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("excluir")]
         public HttpResponseMessage Excluir(int id)
