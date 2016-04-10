@@ -96,6 +96,56 @@ namespace Projeto.Web.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("editar")]
+        public JogadorModelConsulta Editar(int id)
+        {
+            try
+            {
+                JogadorDal d = new JogadorDal();
+                Jogador j = d.FindById(id);
+
+                JogadorModelConsulta model = new JogadorModelConsulta();
+                model.IdJogador = j.IdJogador;
+                model.Nome = j.Nome;
+                model.Apelido = j.Apelido;
+                model.DataNascimento = j.DataNascimento.ToString("dd/MM/yyyy");
+                model.Posicao = j.Posicao;
+                model.Time = j.Time.Nome;
+
+                return model;
+            }
+            catch
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+        }
+
+        [HttpPut]
+        [Route("atualizar")]
+        public HttpResponseMessage Atualizar(JogadorModelEdicao model)
+        {
+            try
+            {
+                Jogador j = new Jogador();
+                j.IdJogador = model.IdJogador;
+                j.Nome = model.Nome;
+                j.Apelido = model.Apelido;
+                j.DataNascimento = model.DataNascimento;
+                j.Posicao = model.Posicao;
+                j.IdTime = model.IdTime;
+
+                JogadorDal d = new JogadorDal();
+                d.Update(j);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Jogador atualizado.");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden, e.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("excluir")]
         public HttpResponseMessage Excluir(int id)
